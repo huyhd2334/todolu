@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
-
+import dotenv from "dotenv";
 export const connectDB = async () => {
   try {
-    await mongoose.connect(process.env.MONGODB_CONNECTIONSTRING);
+    await mongoose.connect(process.env.MONGODB_CONNNECTIONSTRING);
 
     console.log("Liên kết CSDL thành công!");
   } catch (error) {
