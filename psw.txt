@@ -1,0 +1,4 @@
+huyqame1356_db_user - ghiQ3GPzUIkOpt5T
+
+connect string:
+mongodb+srv://huyqame1356_db_user:ghiQ3GPzUIkOpt5T@cluster0.hfhe5xi.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0

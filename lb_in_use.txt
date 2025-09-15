@@ -1,0 +1,5 @@
+npm init -y 
+node server.js   
+npm install nodemon -D
+npm install mongoose
+npm install dotenv  
