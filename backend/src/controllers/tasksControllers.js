@@ -1,7 +1,8 @@
 import Task from "../models/Task.js";
 
 export const getAllTasks = async (req, res) => {
-  const { filter = "today" } = req.query;
+  const filter = req.query.filter || "today";
+  const user = req.query.user || "Guest"
   const now = new Date();
   let startDate;
 
@@ -11,8 +12,7 @@ export const getAllTasks = async (req, res) => {
       break;
     }
     case "week": {
-      const mondayDate =
-        now.getDate() - (now.getDay() - 1) - (now.getDay() === 0 ? 7 : 0);
+      const mondayDate = now.getDate() - (now.getDay() - 1) - (now.getDay() === 0 ? 7 : 0);
       startDate = new Date(now.getFullYear(), now.getMonth(), mondayDate);
       break;
     }
@@ -34,8 +34,8 @@ export const getAllTasks = async (req, res) => {
       {
         $facet: {
           tasks: [{ $sort: { createdAt: -1 } }],
-          activeCount: [{ $match: { status: "active" } }, { $count: "count" }],
-          completeCount: [{ $match: { status: "complete" } }, { $count: "count" }],
+          activeCount: [{ $match: { status: "active" , user: user}}, { $count: "count" }],
+          completeCount: [{ $match: { status: "complete", user: user}}, { $count: "count" }],
         },
       },
     ]);
@@ -53,9 +53,9 @@ export const getAllTasks = async (req, res) => {
 
 export const createTask = async (req, res) => {
   try {
-    const { title } = req.body;
-    const task = new Task({ title });
-
+    const { user, title } = req.body;
+    const task = new Task({ user,  title });
+    
     const newTask = await task.save();
     res.status(201).json(newTask);
   } catch (error) {

@@ -8,7 +8,7 @@ const StatsAndFilters = ({
   completedTasksCount = 0,
   activeTasksCount = 0,
   filter = "all",
-  setFilter,
+  setFilter
 }) => {
   return (
     <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">

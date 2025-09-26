@@ -2,7 +2,7 @@ import React from "react";
 import TaskEmptyState from "./TaskEmptyState";
 import TaskCard from "./TaskCard";
 
-const TaskList = ({ filteredTasks, filter, handleTaskChanged }) => {
+const TaskList = ({filteredTasks, filter, handleTaskChanged }) => {
   if (!filteredTasks || filteredTasks.length === 0) {
     return <TaskEmptyState filter={filter} />;
   }

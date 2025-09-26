@@ -9,8 +9,11 @@ import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
 import api from "@/lib/axios";
 import { visibleTaskLimit } from "@/lib/data";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const HomePage = () => {
+  const location = useLocation();
+  const user = location.state?.user || "Guest"; 
   const [taskBuffer, setTaskBuffer] = useState([]);
   const [activeTaskCount, setActiveTaskCount] = useState(0);
   const [completeTaskCount, setCompleteTaskCount] = useState(0);
@@ -29,7 +32,7 @@ const HomePage = () => {
   // logic
   const fetchTasks = async () => {
     try {
-      const res = await api.get(`/tasks?filter=${dateQuery}`);
+      const res = await api.get(`/tasks?filter=${dateQuery}&user=${user}`);
       setTaskBuffer(res.data.tasks);
       setActiveTaskCount(res.data.activeCount);
       setCompleteTaskCount(res.data.completeCount);
@@ -63,11 +66,11 @@ const HomePage = () => {
   const filteredTasks = taskBuffer.filter((task) => {
     switch (filter) {
       case "active":
-        return task.status === "active";
+        return task.status === "active" && task.user === user;
       case "completed":
-        return task.status === "complete";
+        return task.status === "complete"  && task.user === user;
       default:
-        return true;
+        return task.user === user;
     }
   });
 
@@ -81,7 +84,13 @@ const HomePage = () => {
   }
 
   const totalPages = Math.ceil(filteredTasks.length / visibleTaskLimit);
-
+  
+  const navigate = useNavigate()
+  useEffect(() => {
+    if (user === "Guest") {
+      navigate("/login"); // ✅ gọi trong side effect
+    }
+  }, [user, navigate]);
   return (
     <div className="min-h-screen w-full bg-[#fefcff] relative">
       {/* Dreamy Sky Pink Glow */}
@@ -97,10 +106,9 @@ const HomePage = () => {
       <div className="container relative z-10 pt-8 mx-auto">
         <div className="w-full max-w-2xl p-6 mx-auto space-y-6">
           {/* Đầu Trang */}
-          <Header />
-
+          <Header user = {user}/>
           {/* Tạo Nhiệm Vụ */}
-          <AddTask handleNewTaskAdded={handleTaskChanged} />
+          <AddTask user = {user} handleNewTaskAdded={handleTaskChanged} />
 
           {/* Thống Kê và Bộ lọc */}
           <StatsAndFilters
@@ -136,6 +144,7 @@ const HomePage = () => {
           <Footer
             activeTasksCount={activeTaskCount}
             completedTasksCount={completeTaskCount}
+            user = {user}
           />
         </div>
       </div>
